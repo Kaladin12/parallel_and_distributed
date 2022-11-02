@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
-/*
+#include <time.h>
 
 #ifndef N
 #define N 5
@@ -11,7 +11,6 @@
 #define FS 38
 #endif
 
-
 struct node {
     int data;
     int fibdata;
@@ -19,24 +18,29 @@ struct node {
 };
 // arreglo para guardar la referencia de cada nodo de la linked list
 struct node* pointers[N + 1];
+int fibonacci[FS + 1];
 
-int fib(int n) {
+void fib(int n) {
     int x, y;
     if (n < 2) {
-        return (n);
+        fibonacci[n] = n;
     }
     else {
-        x = fib(n - 1);
-        y = fib(n - 2);
-        return (x + y);
+        x = fibonacci[n - 1];
+        y = fibonacci[n - 2];
+        fibonacci[n] = x + y;
     }
 }
 
 void processwork(struct node* p)
 {
-    int n;
+    int n, i;
     n = p->data;
-    p->fibdata = fib(n);
+    for (i = 0; i < n + 1; i++)
+    {
+        fib(i);
+    }
+    p->fibdata = fibonacci[n];
 }
 
 struct node* init_list(struct node* p) {
@@ -76,13 +80,15 @@ int main(int argc, char* argv[]) {
 
     p = init_list(p);
     head = p;
-    //start = omp_get_wtime();
+    start = omp_get_wtime();
     int iter = 0;
     printf("PARALLEL TASKS\n");
+    //clock_t begin = clock();
+
     omp_set_num_threads(4);
-#pragma omp parallel num_threads(1) default(shared)
+#pragma omp parallel default(shared)
         {
-            
+        printf("Threads: %d", omp_get_num_threads());
             for (iter = 0; iter < N + 1; iter++)
             {
 #pragma omp task
@@ -93,7 +99,7 @@ int main(int argc, char* argv[]) {
             }
         }
    
-    //end = omp_get_wtime();
+    end = omp_get_wtime();
     p = head;
     while (p != NULL) {
         printf("%d : %d\n", p->data, p->fibdata);
@@ -102,10 +108,11 @@ int main(int argc, char* argv[]) {
         p = temp;
     }
     free(p);
+    //clock_t end = clock();
+    //double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    //printf("Compute Time: %f seconds\n", end - start);
+    printf("Compute Time: %f seconds\n", end-start);
 
     return 0;
 }
 
-*/

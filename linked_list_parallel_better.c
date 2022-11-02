@@ -1,14 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
-
+/*
 #ifndef N
 #define N 5
 #endif
 #ifndef FS
 #define FS 38
 #endif
-/*
+
 
 struct node {
     int data;

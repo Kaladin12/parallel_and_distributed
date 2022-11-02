@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
     printf("Process linked list\n");
     printf("  Each linked list node will be processed by function 'processwork()'\n");
     printf("  Each ll node will compute %d fibonacci numbers beginning with %d\n", N, FS);
+    printf("  SECUENCIAL");
     int iter;
     p = init_list(p);
     head = p;
